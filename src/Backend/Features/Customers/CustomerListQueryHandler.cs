@@ -1,16 +1,16 @@
 namespace Backend.Features.Customers;
 
 //Handler which manage the "GetCustomerListQuery" and returns a List of "CustomerListQueryResponse"
-internal class GetCustomerListQueryHandler : IRequestHandler<GetCustomerListQuery, List<CustomerListQueryResponse>>
+internal class CustomerListQueryHandler : IRequestHandler<CustomerListQuery, List<CustomerListQueryResponse>>
 {
     private readonly BackendContext _context;
 
-    public GetCustomerListQueryHandler(BackendContext context)
+    public CustomerListQueryHandler(BackendContext context)
     {
         _context = context;
     }
 
-    public async Task<List<CustomerListQueryResponse>> Handle(GetCustomerListQuery request, CancellationToken cancellationToken)
+    public async Task<List<CustomerListQueryResponse>> Handle(CustomerListQuery request, CancellationToken cancellationToken)
     {
         // Includes data of "CustomerCategory" table for each client
         var query = _context.Customers.Include(c => c.CustomerCategory).AsQueryable();
@@ -22,7 +22,7 @@ internal class GetCustomerListQueryHandler : IRequestHandler<GetCustomerListQuer
         }
 
         query = query.OrderBy(c => c.Name);
-        
+
         // Get query result
         return await query.Select( c => new CustomerListQueryResponse
         {

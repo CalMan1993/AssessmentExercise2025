@@ -27,7 +27,7 @@ static class RouteRegistrationExtensions
         .WithOpenApi();
 
         // "Get" endpoint on /api/cusomters/list
-        apiGroup.MapGet("customers/list", async ([AsParameters] GetCustomerListQuery query, IMediator mediator) => 
+        apiGroup.MapGet("customers/list", async ([AsParameters] CustomerListQuery query, IMediator mediator) => 
         {
             var result = await mediator.Send(query);
             return Results.Ok(result);

@@ -2,7 +2,7 @@ namespace Backend.Features.Customers;
 
 //Query definition using MediatR. Takes an option parameter of type string "SearchText" which will be used as filter in the query
 
-public record GetCustomerListQuery(string ? SearchText) : IRequest<List<CustomerListQueryResponse>>;
+public record CustomerListQuery(string ? SearchText) : IRequest<List<CustomerListQueryResponse>>;
 
 // Query response. Includes both customer and category data.
 public class CustomerListQueryResponse
