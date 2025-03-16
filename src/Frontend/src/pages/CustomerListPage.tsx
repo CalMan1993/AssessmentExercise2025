@@ -9,10 +9,9 @@ import {
     TableRow,
     TextField,
     Typography,
-    styled,
-    tableCellClasses,
     Box,
   } from "@mui/material";
+import {StyledTableHeadCell} from "../Style/commonStyle"
 import { useEffect, useState } from "react";
 
 interface CustomerListQuery {
@@ -48,7 +47,7 @@ export default function CustomerListPage() {
             setCustomers(data as CustomerListQuery[]);
         }
         catch (error) {
-            console.error("Error fatching customers:", error);
+            console.error("Error fetching customers:", error);
         }
     };
 
@@ -144,10 +143,3 @@ export default function CustomerListPage() {
     </>
     );
 }
-
-const StyledTableHeadCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-}));

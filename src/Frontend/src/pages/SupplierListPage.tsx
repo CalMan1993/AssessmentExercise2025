@@ -7,9 +7,8 @@ import {
   TableHead,
   TableRow,
   Typography,
-  styled,
-  tableCellClasses,
 } from "@mui/material";
+import {StyledTableHeadCell} from "../Style/commonStyle"
 import { useEffect, useState } from "react";
 
 interface SupplierListQuery {
@@ -23,14 +22,24 @@ interface SupplierListQuery {
 export default function SupplierListPage() {
   const [list, setList] = useState<SupplierListQuery[]>([]);
 
+  const fetchSuppliers = async () => {
+    try {
+      const response = await fetch("/api/suppliers/list");
+
+      if(!response.ok) {
+          throw new Error("Network response not ok");
+      }
+
+      const data = await response.json();
+      setList(data as SupplierListQuery[]);
+    }
+    catch (error) {
+            console.error("Error fetching Suppliers:", error);
+    }
+  };
+
   useEffect(() => {
-    fetch("/api/suppliers/list")
-      .then((response) => {
-        return response.json();
-      })
-      .then((data) => {
-        setList(data as SupplierListQuery[]);
-      });
+    fetchSuppliers()
   }, []);
 
   return (
@@ -67,10 +76,3 @@ export default function SupplierListPage() {
     </>
   );
 }
-
-const StyledTableHeadCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.primary.light,
-    color: theme.palette.common.white,
-  },
-}));
