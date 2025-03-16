@@ -1,4 +1,5 @@
 import {
+    Button,
     Paper,
     Table,
     TableBody,
@@ -6,9 +7,11 @@ import {
     TableContainer,
     TableHead,
     TableRow,
+    TextField,
     Typography,
     styled,
     tableCellClasses,
+    Box,
   } from "@mui/material";
 import { useEffect, useState } from "react";
 
@@ -25,22 +28,53 @@ interface CustomerListQuery {
 
 export default function CustomerListPage() {
     const [customers, setCustomers] = useState<CustomerListQuery[]>([]);
+    const [searchText, setSearchtext] = useState("");
+
+    // Add function to be called on page loading and on "onClick" button event to apply search filter
+    const fetchCustomers = async () => {
+        try {
+            const params = new URLSearchParams();
+            if(searchText) {
+                params.append("SearchText", searchText);
+            }
+
+            const response = await fetch (`/api/customers/list?${params.toString()}`);
+
+            if(!response.ok) {
+                throw new Error("Network response not ok");
+            }
+
+            const data = await response.json();
+            setCustomers(data as CustomerListQuery[]);
+        }
+        catch (error) {
+            console.error("Error fatching customers:", error);
+        }
+    };
 
     useEffect(() => {
-        fetch("/api/customers/list")
-          .then((response) => {
-            return response.json();
-          })
-          .then((data) => {
-            setCustomers(data as CustomerListQuery[]);
-          });
+        fetchCustomers();
       }, []);
 
     return ( 
     <>
         <Typography variant="h4" sx={{ textAlign: "center", mt: 4, mb: 4 }}>
-        Customers
+            Customers
         </Typography>
+
+        <Box sx = {{display: "flex", alignItems: "center", gap: 2, mb: 2}}>
+            <TextField 
+                label = "Filter by Name or Email"
+                value = {searchText}
+                onChange = {(e) => setSearchtext(e.target.value)}
+               fullWidth
+            />
+            <Button 
+                variant="contained" 
+                onClick={fetchCustomers}>
+                Filter 
+            </Button>
+        </Box>
 
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
