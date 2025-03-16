@@ -56,6 +56,35 @@ export default function CustomerListPage() {
         fetchCustomers();
       }, []);
 
+    const exportToXml = () => {
+        const xmlContent = `
+            <Customers>
+                ${customers.map(customer => `
+                    <Customer>
+                    <Id>${customer.id}</Id>
+                    <Name>${customer.name}</Name>
+                    <Address>${customer.address}</Address>
+                    <Email>${customer.email}</Email>
+                    <Phone>${customer.phone}</Phone>
+                    <Iban>${customer.iban}</Iban>
+                    <CategoryCode>${customer.categoryCode}</CategoryCode>
+                    <CategoryDescription>${customer.categoryDescription}</CategoryDescription>
+                    </Customer>
+                `).join('')}
+            </Customers>`.trim();
+
+        const blob = new Blob([xmlContent], {type: 'application/xml'});
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a')
+        a.href = url;
+        a.download = 'customers.xml';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+    }
+
     return ( 
     <>
         <Typography variant="h4" sx={{ textAlign: "center", mt: 4, mb: 4 }}>
@@ -73,6 +102,11 @@ export default function CustomerListPage() {
                 variant="contained" 
                 onClick={fetchCustomers}>
                 Filter 
+            </Button>
+            <Button 
+                variant="contained" 
+                onClick={exportToXml}>
+                XML EXPORT 
             </Button>
         </Box>
 
