@@ -1,7 +1,7 @@
 namespace Backend.Features.Customers;
 
 //Handler which manage the "GetCustomerListQuery" and returns a List of "CustomerListQueryResponse"
-public class GetCustomerListQueryHandler : IRequestHandler<GetCustomerListQuery, List<CustomerListQueryResponse>>
+internal class GetCustomerListQueryHandler : IRequestHandler<GetCustomerListQuery, List<CustomerListQueryResponse>>
 {
     private readonly BackendContext _context;
 
@@ -21,6 +21,8 @@ public class GetCustomerListQueryHandler : IRequestHandler<GetCustomerListQuery,
             query = query.Where( c => c.Name.Contains(request.SearchText) || c.Email.Contains(request.SearchText));
         }
 
+        query = query.OrderBy(c => c.Name);
+        
         // Get query result
         return await query.Select( c => new CustomerListQueryResponse
         {
