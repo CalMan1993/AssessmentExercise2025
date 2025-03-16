@@ -1,3 +1,4 @@
+using Backend.Features.Customers;
 using Backend.Features.Employees;
 using Backend.Features.Suppliers;
 
@@ -16,5 +17,15 @@ static class RouteRegistrationExtensions
         apiGroup.MapGet("employees/list", async ([AsParameters] EmployeesListQuery query, IMediator mediator) => await mediator.Send(query))
                     .WithName("GetEmployeesList")
                     .WithOpenApi();
+
+        // "Get" endpoint on /api/cusomters/list
+        apiGroup.MapGet("customers/list", async ([AsParameters] GetCustomerListQuery query, IMediator mediator) => 
+        {
+            var result = await mediator.Send(query);
+            return Results.Ok(result);
+        })
+        .WithName("GetCustomersName")
+        .WithOpenApi();    
+
     }
 }
